@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Maintenance Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        table-layout: auto;
+      }
+      
+      th,
+      td {
+        padding: 6px;
+        text-align: center;
+        border: 1px solid #ddd;
+        font-size: 12px;
+        white-space: nowrap;
+        line-height: 1.2;
+      }
+      
+      th {
+        background-color: rgb(168, 168, 168);
+        font-weight: bold;
+      }
+      
+      .section-title {
+        margin: 10px 0;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+      }
+      
+      .field-container {
+        display: inline-block;
+        text-align: center;
+      }
+      
+      .field-separator {
+        display: block;
+        margin: 2px 0;
+        border-top: 1px dashed #ddd;
+        width: 100%;
+      }
+      
+      .row-separator {
+        border-top: 5px solid black;
+        margin: 5px 0;
+      }
+      
+      .row-block {
+        height: 25px;
+        background-color: transparent;
+        border: none;
+      }
+      
+      @page {
+        size: A4 landscape;
+        margin: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="section-title">Comprehensive Maintenance Report</div>
+    <div class="table-container">
+      <table>
+        {% comment %} <thead>
+          <tr>
+            <th>PC</th>
+            <th>Laptop</th>
+            <th>PlayStation</th>
+            <th>PS Stick</th>
+            <th>Router</th>
+            <th>Customer</th>
+            <th>Customer Phone</th>
+          </tr>
+        </thead> {% endcomment %}
+        <tbody>
+          {% for maintenance in maintenances %}
+            <tr>
+              <th>Device</th>
+              <th>Customer</th>
+              {% comment %} <th>Customer Phone</th> {% endcomment %}
+              <th>Issue</th>
+              <th>Date Created</th>
+              <th>Maintenance Time</th>
+            </tr>
+            <tr>
+              <td>
+                {% if maintenance.device_type == 'pc' %}
+                  {{ maintenance.pc }}
+                {% elif maintenance.device_type == 'laptop' %}
+                  {{ maintenance.laptop }}
+                {% elif maintenance.device_type == 'playstation' %}
+                  {{ maintenance.playstation }}
+                {% elif maintenance.device_type == 'gamestick' %}
+                  {{ maintenance.gamestick }}
+                {% elif maintenance.device_type == 'router' %}
+                  {{ maintenance.router }}
+                {% endif %}
+              </td>
+              <td>{{ maintenance.customer }}</td>
+              {% comment %} <td>{{ maintenance.customer_phone_number }}</td> {% endcomment %}
+              <td>{{ maintenance.issue }}</td>
+              <td>{{ maintenance.date_created }}</td>
+              <td>{{ maintenance.maintenance_time }}</td>
+            </tr>
+
+            <tr>
+              <th>Maintenance Number</th>
+              <th>Maintenance Status</th>
+              <th>Technician Name</th>
+              <th>Cost</th>
+              <th>Maintenance Report</th>
+              <th>Handover Date</th>
+            </tr>
+            <tr>
+              <td>{{ maintenance.maintenance_number }}</td>
+              <td>{{ maintenance.maintenance_status }}</td>
+              <td>{{ maintenance.technician_name }}</td>
+              <td>{{ maintenance.cost }}</td>
+              <td>{{ maintenance.maintenance_report }}</td>
+              <td>{{ maintenance.handover_date }}</td>
+            </tr>
+
+            <tr class="row-separator"></tr>
+            <tr class="row-block">
+              <td colspan="6"></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

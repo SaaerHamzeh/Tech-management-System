@@ -1,0 +1,176 @@
+h2 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* تصميم الإطار العام للنموذج */
+.form-container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f9f9f9, #ffffff);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    float: left;
+    /* جعل النموذج يطفو */
+    position: relative;
+    left: 50%;
+    /* نقل النموذج إلى منتصف الشاشة أفقيًا */
+    transform: translateX(-50%);
+    /* تعديل المركز */
+    margin-top: 5%;
+    /* تعديل المركز عموديًا */
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Three equal columns */
+    gap: 20px;
+}
+
+
+/* تنسيق التسميات (Labels) */
+.form-field label {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* تنسيق حقول الإدخال (Input Fields) */
+.form-field input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+}
+
+select {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+}
+
+/* _____________________________________________________*/
+.device-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.device-options input[type="radio"] {
+    margin-right: 5px;
+}
+
+.device-options label {
+    margin-right: 15px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.I {
+    font-size: xx-large;
+}
+
+/*________________________________________________________ */
+
+.form-field input:focus {
+    border-color: #aa4fb3;
+    box-shadow: 0 0 8px rgba(55, 16, 79, 0.3);
+    outline: none;
+}
+
+/* تحسين زر الإرسال (Submit Button) */
+.submit-button {
+    background: linear-gradient(135deg, #af4ca3, #a04595);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin-top: 20px;
+}
+
+.submit-button:hover {
+    background: linear-gradient(135deg, #9a45a0, #5e0265);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-dark .navbar-brand {
+    font-size: xx-large;
+}
+
+.nav-link {
+    color: #000000;
+    font-size: large;
+
+}
+
+.nav-link:hover {
+    color: #9a45a0;
+    background-color: #af4ca3;
+}
+
+.my-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 8px;
+    font-size: 15px;
+    background-color: #9a45a0;
+    color: #f5f7fa;
+    /* left: 85%;
+    width: 15%; */
+
+}
+
+.search-btn {
+    font-size: 15px;
+    background-color: #9a45a0;
+    color: #f5f7fa;
+}
+
+.my-btn:hover {
+    background-color: #701a66;
+    color: #f5f7fa;
+}
+
+.search-btn:hover {
+    background-color: #701a66;
+    color: #f5f7fa;
+}
+
+.card.card-body {
+    position: relative;
+}

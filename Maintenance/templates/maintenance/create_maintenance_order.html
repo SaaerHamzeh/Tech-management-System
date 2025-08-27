@@ -1,0 +1,96 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="form-container">
+    <h2>Manage Maintenance Order</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+        <!-- العمود الأول -->
+        <div class="form-column">
+          <label for="device-type">نوع الجهاز:</label>
+          <select id="device-type" name="device_type">
+            <option value="">-- اختر نوع الجهاز --</option>
+            <option value="pc">PC</option>
+            <option value="laptop">Laptop</option>
+            <option value="playstation">PlayStation</option>
+            <option value="gamestick">GameStick</option>
+            <option value="router">Router</option>
+          </select>
+
+          <!-- هذا هو المكان الذي سيُعرض فيه النموذج الديناميكي -->
+          <div id="device-form-container"></div>
+        </div>
+        <!-- العمود الثاني -->
+        <div class="form-column">
+          <div id="customer-form" style="display:block;">
+            <h5>معلومات الزبون</h5>
+
+            <!-- زبون موجود -->
+            <div class="form-group mb-3">
+              <label for="id_existing_customer">اختيار زبون موجود:</label>
+              {{ customer_form.existing_customer }}
+              {{ customer_form.existing_customer.errors }}
+            </div>
+
+            <hr class="my-3" />
+
+            <p class="text-muted">أو أدخل زبون جديد:</p>
+
+            <!-- اسم الزبون الجديد -->
+            <div class="form-group mb-3">
+              <label for="id_new_name">اسم الزبون الجديد:</label>
+              {{ customer_form.new_name }}
+              {{ customer_form.new_name.errors }}
+            </div>
+
+            <!-- رقم الهاتف الجديد -->
+            <div class="form-group mb-3">
+              <label for="id_new_phone">رقم الهاتف الجديد:</label>
+              {{ customer_form.new_phone }}
+              {{ customer_form.new_phone.errors }}
+            </div>
+
+            {{ customer_form.media }}
+          </div>
+
+          {% comment %} <div class="form-field">{{ maintenance_form.issue.label_tag }}{{ maintenance_form.issue }}</div> {% endcomment %}
+          <div class="form-field">{{ maintenance_form.maintenance_time.label_tag }}{{ maintenance_form.maintenance_time }}</div>
+          <div class="form-field">{{ maintenance_form.maintenance_report.label_tag }}{{ maintenance_form.maintenance_report }}</div>
+        </div>
+
+        <!-- العمود الثالث -->
+        <div class="form-column">
+          <div class="form-field">{{ maintenance_form.maintenance_status.label_tag }}{{ maintenance_form.maintenance_status }}</div>
+          <div class="form-field">{{ maintenance_form.technician_name.label_tag }}{{ maintenance_form.technician_name }}</div>
+          <div class="form-field">{{ maintenance_form.cost.label_tag }}{{ maintenance_form.cost }}</div>
+          <div class="form-field">{{ maintenance_form.handover_date.label_tag }}{{ maintenance_form.handover_date }}</div>
+        </div>
+      </div>
+
+      <!-- زر الإرسال -->
+      <input type="submit" name="submit" class="submit-button" value="Submit" />
+    </form>
+  </div>
+
+  <script>
+document.getElementById("device-type").addEventListener("change", function () {
+  const selectedType = this.value;
+  const container = document.getElementById("device-form-container");
+
+  if (selectedType === "") {
+    container.innerHTML = "";
+    return;
+  }
+
+  fetch(`/get-device-form/?type=${selectedType}`)
+    .then((res) => res.text())
+    .then((html) => {
+      container.innerHTML = html;
+    })
+    .catch((err) => {
+      container.innerHTML = "<p style='color:red;'>فشل تحميل النموذج</p>";
+      console.error("AJAX Error:", err);
+    });
+});
+</script>
+{% endblock %}

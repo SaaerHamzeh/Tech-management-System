@@ -1,0 +1,51 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="row">
+
+    <div class="col-md">
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+          <h2>Adding Playstation</h2>
+          <div class="form-field">{{ playstationform.device_type_model.label_tag }}
+            {{ playstationform.device_type_model }}</div>
+
+          <div class="form-field">{{ playstationform.issue.label_tag }}
+            {{ playstationform.issue }}</div>
+
+          <div class="form-field">{{ playstationform.serial_number.label_tag }}
+            {{ playstationform.serial_number }}</div>
+
+          <div class="form-field">{{ playstationform.motherboard.label_tag }}
+            {{ playstationform.motherboard }}</div>
+
+          <div class="form-field">{{ playstationform.processor.label_tag }}
+            {{ playstationform.processor }}</div>
+
+          <div class="form-field">{{ playstationform.storage.label_tag }}
+            {{ playstationform.storage }}</div>
+
+          <div class="form-field">{{ playstationform.ram.label_tag }}
+            {{ playstationform.ram }}</div>
+
+          <div class="form-field">{{ playstationform.gpu.label_tag }}
+            {{ playstationform.gpu }}</div>
+
+          <div class="form-field">{{ playstationform.power_supply.label_tag }}
+            {{ playstationform.power_supply }}</div>
+
+          <div class="form-field">{{ playstationform.optical_drive.label_tag }}
+            {{ playstationform.optical_drive }}</div>
+
+          <div class="form-field">{{ playstationform.firmware_version.label_tag }}
+            {{ playstationform.firmware_version }}</div>
+
+          <div class="form-field">{{ playstationform.accessories.label_tag }}
+            {{ playstationform.accessories }}</div>
+
+          <input type="submit" name="submit" value="ADD" class="submit-button" />
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="row">
+    <div class="col-md">
+      <div class="form-container">
+        <form action="" method="post">
+          {% csrf_token %}
+          <h2>Manage Playstation</h2>
+          <div class="form-grid">
+            <div class="form-column">
+              <div class="form-field">{{ playstationform.customer.label_tag }}
+                {{ playstationform.customer }}</div>
+              <div class="form-field">{{ playstationform.device_type_model.label_tag }}
+                {{ playstationform.device_type_model }}</div>
+
+              <div class="form-field">{{ playstationform.issue.label_tag }}
+                {{ playstationform.issue }}</div>
+
+
+
+            </div>
+            <div class="form-column">
+
+              <div class="form-field">{{ playstationform.serial_number.label_tag }}
+                {{ playstationform.serial_number }}</div>
+              <div class="form-field">{{ playstationform.storage.label_tag }}
+                {{ playstationform.storage }}</div>
+
+                <div class="form-field">{{ playstationform.power_supply.label_tag }}
+                  {{ playstationform.power_supply }}</div>
+  
+  
+                <div class="form-field">{{ playstationform.firmware_version.label_tag }}
+                  {{ playstationform.firmware_version }}</div>
+
+            </div>
+            <div class="form-column">
+
+
+              <div class="form-field">{{ playstationform.accessories.label_tag }}
+                {{ playstationform.accessories }}</div>
+
+              <div class="form-field">{{ playstationform.notes.label_tag }}
+                {{ playstationform.notes }}</div>
+            </div>
+          </div>
+          <input type="submit" name="submit" value="submit" class="submit-button" />
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-white">
+  <a class="navbar-brand d-flex align-items-center" href="{% url 'alshaar dashboard' %}">
+    <img src="{% static 'images/logo.png' %}" alt="Logo" width="200" height="70" class="d-inline-block align-top mr-2" />
+    {% comment %} Al-Shaar Dashboard {% endcomment %}
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item {% if request.resolver_match.url_name == 'alshaar dashboard' %}active{% endif %}">
+        <a class="nav-link text-dark" href="{% url 'alshaar dashboard' %}">Home</a>
+      </li>
+      <li class="nav-item {% if request.resolver_match.url_name == 'devices' %}active{% endif %}">
+        <a class="nav-link text-dark" href="{% url 'devices' %}">Devices</a>
+      </li>
+      <li class="nav-item {% if request.resolver_match.url_name == 'customers' %}active{% endif %}">
+        <a class="nav-link text-dark" href="{% url 'customers' %}">Customers</a>
+      </li>
+      <li class="nav-item {% if request.resolver_match.url_name == 'technicians' %}active{% endif %}">
+        <a class="nav-link text-dark" href="{% url 'technicians' %}">Technicians</a>
+      </li>
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,31 @@
+{% with ram_id=prefix|add:'-ram-count' hard_id=prefix|add:'-hard-count' ram_class=prefix|add:'-ram-form' hard_class=prefix|add:'-hard-form' %}
+  <label>How many RAMs?</label>
+  <select id="{{ ram_id }}">
+    <option value="0">0</option>
+    {% for i in '1234'|make_list %}
+      <option value="{{ i }}">{{ i }}</option>
+    {% endfor %}
+  </select>
+
+  <div class="form-field">
+    {{ ram_formset.management_form }}
+    {% for form in ram_formset %}
+      <div class="{{ ram_class }}" style="display: none;">{{ form.as_p }}</div>
+    {% endfor %}
+  </div>
+
+  <label>How many hards?</label>
+  <select id="{{ hard_id }}">
+    <option value="0">0</option>
+    {% for i in '1234'|make_list %}
+      <option value="{{ i }}">{{ i }}</option>
+    {% endfor %}
+  </select>
+
+  <div class="form-field">
+    {{ hard_formset.management_form }}
+    {% for form in hard_formset %}
+      <div class="{{ hard_class }}" style="display: none;">{{ form.as_p }}</div>
+    {% endfor %}
+  </div>
+{% endwith %}

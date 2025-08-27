@@ -1,0 +1,130 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="form-container">
+    <h2>Managing Payment</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+        <!-- Column 1 -->
+        <div class="form-column">
+          <!-- payments Basic Information -->
+          <div class="form-field">{{ form.item.label_tag }}{{ form.item }}</div>
+          <div class="form-field">{{ form.model.label_tag }}{{ form.model }}</div>
+          <div class="form-field">{{ form.quantity.label_tag }}{{ form.quantity }}</div>
+          <div class="form-field">{{ form.price.label_tag }}{{ form.price }}</div>
+        </div>
+        <div class="form-column">
+          <div class="form-field">{{ form.status.label_tag }}{{ form.status }}</div>
+          <div class="form-field">{{ form.serial_number.label_tag }}{{ form.serial_number }}</div>
+          <div class="form-field">{{ form.warranty.label_tag }}{{ form.warranty }}</div>
+          <div class="form-field">{{ form.source.label_tag }}{{ form.source }}</div>
+          <!-- payments Financial Information -->
+        </div>
+        <!-- Column 2 -->
+        <div class="form-column">
+          <!-- payments Additional Information -->
+          <div class="form-field">{{ form.description.label_tag }}{{ form.description }}</div>
+          <div class="form-field">{{ form.notes.label_tag }}{{ form.notes }}</div>
+        </div>
+      </div>
+
+      <!-- زر الإرسال -->
+      <input type="submit" name="submit" class="submit-button" value="Submit" />
+    </form>
+  </div>
+
+  <style>
+    /* تصميم الصفحة */
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #f5f7fa);
+    }
+    h2 {
+      font-weight: bold;
+      color: rgb(168, 30, 163);
+      margin-bottom: 15px;
+    }
+    /* تصميم الإطار العام للنموذج */
+    .form-container {
+      max-width: 1200px; /* زيادة العرض لاستيعاب العمودين */
+      width: 100%;
+      padding: 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f9f9f9, #ffffff);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* تخطيط النموذج باستخدام Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+      gap: 20px;
+    }
+    
+    /* تنسيق التسميات (Labels) */
+    .form-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* تنسيق حقول الإدخال (Input Fields) */
+    .form-field input,
+    .form-field textarea,
+    .form-field select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background-color: #fff;
+      margin-bottom: 15px;
+    }
+    
+    .form-field input:focus,
+    .form-field textarea:focus,
+    .form-field select:focus {
+      border-color: #aa4fb3;
+      box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+      outline: none;
+    }
+    
+    /* تحسين زر الإرسال (Submit Button) */
+    .submit-button {
+      background: linear-gradient(135deg, #af4ca3, #a04595);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      margin-top: 20px;
+    }
+    
+    .submit-button:hover {
+      background: linear-gradient(135deg, #9a45a0, #5e0265);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .submit-button:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="row">
+    <div class="col-md">
+      <div class="form-container">
+        <form action="" method="post">
+          {% csrf_token %}
+          <h2>Manage Router</h2>
+          {% if routerform.errors %}
+            <div class="errors">
+              <ul>
+                {% for field, errors in routerform.errors.items %}
+                  <li>
+                    {{ field }}:<ul>
+                      {% for error in errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+          <div class="form-grid">
+            <div class="form-column">
+              <div class="form-field">{{ routerform.customer.label_tag }}
+                {{ routerform.customer }}</div>
+
+              <div class="form-field">{{ routerform.brand.label_tag }}
+                {{ routerform.brand }}</div>
+
+              <div class="form-field">{{ routerform.model.label_tag }}
+                {{ routerform.model }}</div>
+            </div>
+            <div class="form-column">
+              <div class="form-field">{{ routerform.serial_number.label_tag }}
+                {{ routerform.serial_number }}</div>
+
+              <div class="form-field">
+                {{ routerform.mac_address.label_tag }} {% comment %}XX:XX:XX:XX:XX:XX{% endcomment %}
+                {{ routerform.mac_address }}
+              </div>
+
+              <div class="form-field">{{ routerform.status.label_tag }}
+                {{ routerform.status }}</div>
+            </div>
+            <div class="form-column">
+              <div class="form-field">{{ routerform.issue.label_tag }}
+                {{ routerform.issue }}</div>
+
+              <div class="form-field">{{ routerform.notes.label_tag }}
+                {{ routerform.notes }}</div>
+            </div>
+          </div>
+          <input type="submit" name="submit" value="submit" class="submit-button" />
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,554 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="container-xxl">
+    <br />
+    {% comment %}__________________sales_&_maintenenaces_statistics_part_________________{% endcomment %}
+    {% comment %} <div class="row">
+      <div class="col-6">
+        <div class="card text-center text-dark mb-3" id="total-orders">
+          <div class="card-header">
+            <h3 class="card-title">Maintenances Tasks</h3>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">كلي الأعمال -Total Tasks: {{ total_tasks }}</h4><hr class="bg-dark" />
+            <h4 class="card-title">تكلفة كل الأعمال -Total Costs Tasks: {{ maintenances_rounded_total }}</h4><hr class="bg-dark" />
+            <h4 class="card-title">الأعمال المعلقة -Total Pending Tasks: {{ total_pending_tasks }}</h4><hr class="bg-dark" />
+            <h4 class="card-title">الأعمال قيد العمل -Total In-Progress Tasks: {{ total_In_Progress_tasks }}</h4><hr class="bg-dark" />
+            <h4 class="card-title">الأعمال المنتهية -Total Completed Tasks: {{ total_Completed_tasks }}</h4><hr class="bg-dark" />
+            <h4 class="card-title">الأعمال الملغاة -Total Cancelled Tasks: {{ total_Cancelled_tasks }}</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card text-center text-dark mb-3" id="total-orders">
+          <div class="card-header">
+            <h3 class="card-title">Sales</h3>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title">كلي المبيعات -Total Sales: {{ total_sales }}</h4><hr class="bg-dark" />
+            <h4 class="card-title">مجموع الأسعار -Total Prices: {{ sales_rounded_price }}</h4><hr class="bg-dark" />
+            <h4 class="card-title">مجموع التكالبف -Total Costs: {{ sales_rounded_total }}</h4><hr class="bg-dark" />
+            <h4 class="card-title">صافي المبيعات -Net Sales: {{ sales_rounded_net_sales }}</h4>
+          </div>
+        </div>
+      </div>
+    </div> {% endcomment %}
+    {% comment %}____________________________________________________________________________________{% endcomment %}
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="main" aria-selected="true">Maintenances</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="sales-tab" data-toggle="tab" href="#sales" role="tab" aria-controls="sales" aria-selected="false">Sales</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="payments-tab" data-toggle="tab" href="#payments" role="tab" aria-controls="payments" aria-selected="false">Payments</a>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+      {% comment %}__________________maintenance_part_________________{% endcomment %}
+      <br />
+      <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
+        {% comment %}search part{% endcomment %}
+        <!-- زر إظهار/إخفاء النموذج -->
+        {% comment %} <div class="text-center my-3">
+          <button class="btn btn-primary" onclick="toggleSearchFormM()">🔍 Toggle Search Form</button>
+        </div> {% endcomment %}
+        <div class="row justify-content-center" id="search-maintenancesform" style="display: none;">
+          <div class="col-md-8">
+            <div class="card shadow-sm">
+              <!-- إضافة ظل للبطاقة -->
+              <div class="card-body">
+                <form action="" method="get" class="row g-3 align-items-center">
+                  <!-- حقل الفلترة -->
+                  <div class="col-md-10">
+                    <div class="input-group">{{ MaintenanceFilter.form }}</div>
+                  </div>
+
+                  <!-- زر البحث -->
+                  <div class="col-md-2">
+                    <button class="btn search-btn w-100" type="submit"><i class="fas fa-search me-2"></i> Search <!-- إضافة أيقونة --></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% comment %}end search part{% endcomment %}
+        <br />
+        <div class="row">
+          <div class="col-md">
+            <div class="card card-body">
+              <!-- زر إنشاء صيانة جديدة -->
+              <a class="btn btn-sm my-btn" href="{% url 'maintenance_form' %}">Create Maintenance +</a>
+              <div class="col-md-2">
+                <a href="{% url 'generate_pdf' %}?{{ request.GET.urlencode }}" class="btn btn-success" target="_blank">📝 Generate PDF</a>
+              </div>
+              <br />
+              <!-- أزرار التبويب -->
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic" role="tab" aria-controls="basic" aria-selected="true">Basic Info</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="hardware-tab" data-toggle="tab" href="#hardware" role="tab" aria-controls="hardware" aria-selected="false">Hardware Info</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="status-tab" data-toggle="tab" href="#status" role="tab" aria-controls="status" aria-selected="false">Status & Actions</a>
+                </li>
+              </ul>
+
+              <!-- محتوى التبويبات -->
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>
+                            Customer <br /> العميل
+                          </th>
+                          {% comment %} <th>
+                            Customer Phone <br /> هاتف العميل
+                          </th> {% endcomment %}
+                          <th>
+                            Device <br /> الجهاز
+                          </th>
+                          <th>
+                            Issue <br /> المشكلة
+                          </th>
+                          <th>
+                            Receive Date <br /> تاريخ الاستلام
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for maintenance in maintenances %}
+                          <tr>
+                            <td>{{ maintenance.customer }}</td>
+                            {% comment %} <td>{{ maintenance.customer_phone_number }}</td> {% endcomment %}
+                            <td>
+                              <small class="text-muted">
+                                {% if maintenance.device_type == 'pc' %}
+                                  {{ maintenance.pc }}
+                                {% elif maintenance.device_type == 'laptop' %}
+                                  {{ maintenance.laptop }}
+                                {% elif maintenance.device_type == 'playstation' %}
+                                  {{ maintenance.playstation }}
+                                {% elif maintenance.device_type == 'gamestick' %}
+                                  {{ maintenance.gamestick }}
+                                {% elif maintenance.device_type == 'router' %}
+                                  {{ maintenance.router }}
+                                {% endif %}
+                              </small>
+                            </td>
+                            <td>{{ maintenance.issue }}</td>
+                            <td>{{ maintenance.date_created }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="hardware" role="tabpanel" aria-labelledby="hardware-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>
+                            Customer <br /> العميل
+                          </th>
+
+                          <th>
+                            Maintenance Time <br /> وقت الصيانة
+                          </th>
+                          <th>
+                            Maintenance Number <br /> رقم الصيانة
+                          </th>
+                          <th>
+                            Maintenance Status <br /> حالة الصيانة
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for maintenance in maintenances %}
+                          <tr>
+                            <td>{{ maintenance.customer }}</td>
+
+                            <td>{{ maintenance.maintenance_time }}</td>
+                            <td>{{ maintenance.maintenance_number }}</td>
+
+                            <td style="background-color: {% if maintenance.maintenance_status == 'Completed' %}
+                                
+                                #28a745
+
+                              {% elif maintenance.maintenance_status == 'Pending' %}
+                                
+                                #ffc107
+
+                              {% elif maintenance.maintenance_status == 'In Progress' %}
+                                
+                                #17a2b8
+
+                              {% else %}
+                                
+                                #dc3545
+
+                              {% endif %};">{{ maintenance.maintenance_status }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="status" role="tabpanel" aria-labelledby="status-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>
+                            Customer <br /> العميل
+                          </th>
+                          <th>
+                            Maintenance Report <br /> تقرير الصيانة
+                          </th>
+                          <th>
+                            Technician Name <br /> اسم الفني
+                          </th>
+                          <th>
+                            Cost <br /> التكلفة
+                          </th>
+                          <th>
+                            Handover Date <br /> تاريخ التسليم
+                          </th>
+                          {% comment %} <th>Update</th>
+                          <th>Delete</th> {% endcomment %}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for maintenance in maintenances %}
+                          <tr>
+                            <th>{{ maintenance.customer }}</th>
+                            <td>{{ maintenance.maintenance_report }}</td>
+                            <td>{{ maintenance.technician_name }}</td>
+                            <td>{{ maintenance.cost }}</td>
+                            <td>{{ maintenance.handover_date }}</td>
+
+                            <td>
+                              <a class="btn btn-sm btn-info" href="{% url 'update_order' maintenance.id %}">Update</a>
+                            </td>
+                            <td>
+                              <a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'MaintenanceInfo' maintenance.id %}" onclick="return confirmDelete();">Delete</a>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %}__________________sales_part_________________{% endcomment %}
+      <div class="tab-pane fade" id="sales" role="tabpanel" aria-labelledby="sales-tab">
+        {% comment %}search part{% endcomment %}
+        <div class="text-center my-3">
+          <button class="btn btn-primary" onclick="toggleSearchFormS()">🔍 Toggle Search Form</button>
+        </div>
+        <div class="row justify-content-center" id="search-salesform" style="display: none;">
+          <div class="col-md-8">
+            <div class="card shadow-sm">
+              <!-- إضافة ظل للبطاقة -->
+              <div class="card-body">
+                <form action="" method="get" class="row g-3 align-items-center">
+                  <!-- حقل الفلترة -->
+                  <div class="col-md-10">
+                    <div class="input-group">{{ salesFilter.form }}</div>
+                  </div>
+
+                  <!-- زر البحث -->
+                  <div class="col-md-2">
+                    <button class="btn search-btn w-100" type="submit"><i class="fas fa-search me-2"></i> Search <!-- إضافة أيقونة --></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% comment %}end search part{% endcomment %}
+        <br />
+        <div class="row">
+          <div class="col-md">
+            <div class="card card-body">
+              <!-- Button to Create a New Sale -->
+              <a class="btn btn-sm my-btn" href="{% url 'sales' %}">Create Sale</a>
+              <br />
+
+              <!-- Sales Tabs -->
+              <ul class="nav nav-tabs" id="salesTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="sales-basic-tab" data-toggle="tab" href="#sales-basic" role="tab" aria-controls="sales-basic" aria-selected="true">Basic Info</a>
+                </li>
+                {% comment %} <li class="nav-item">
+                  <a class="nav-link" id="sales-financial-tab" data-toggle="tab" href="#sales-financial" role="tab" aria-controls="sales-financial" aria-selected="false">Financial Info</a>
+                </li> {% endcomment %}
+                <li class="nav-item">
+                  <a class="nav-link" id="sales-additional-tab" data-toggle="tab" href="#sales-additional" role="tab" aria-controls="sales-additional" aria-selected="false">Additional Info</a>
+                </li>
+              </ul>
+
+              <!-- Tab Content -->
+              <div class="tab-content" id="salesTabContent">
+                <!-- Basic Info Tab -->
+                <div class="tab-pane fade show active" id="sales-basic" role="tabpanel" aria-labelledby="sales-basic-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>
+                            Item <br /> العنصر
+                          </th>
+                          <th>
+                            Model <br /> الموديل
+                          </th>
+                          <th>
+                            Quantity <br /> الكمية
+                          </th>
+                          <th>
+                            Price <br /> السعر
+                          </th>
+                          <th>
+                            Received Amount <br /> المبلغ المستلم
+                          </th>
+                          <th>
+                            Status <br /> الحالة
+                          </th>
+                          <th>
+                            Customer <br /> العميل
+                          </th>
+                          <th>
+                            Serial Number <br /> الرقم التسلسلي
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for sale in sales %}
+                          <tr>
+                            <td>{{ sale.item }}</td>
+                            <td>{{ sale.model }}</td>
+                            <td>{{ sale.quantity }}</td>
+                            <td>{{ sale.price }}</td>
+                            <td>{{ sale.received_amount }}</td>
+                            <td>{{ sale.status }}</td>
+                            <td>{{ sale.customer }}</td>
+                            <td>{{ sale.serial_number }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Financial Info Tab -->
+                {% comment %} <div class="tab-pane fade" id="sales-financial" role="tabpanel" aria-labelledby="sales-financial-tab">
+                  <table class="table table-striped table-hover">
+                    <thead>
+                      <tr></tr>
+                    </thead>
+                    <tbody>
+                      {% for sale in sales %}
+                        <tr></tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div> {% endcomment %}
+
+                <!-- Additional Info Tab -->
+                <div class="tab-pane fade" id="sales-additional" role="tabpanel" aria-labelledby="sales-additional-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>
+                            Item <br /> العنصر
+                          </th>
+                          <th>
+                            Model <br /> الموديل
+                          </th>
+
+                          <th>
+                            Description <br /> الوصف
+                          </th>
+                          <th>
+                            Notes <br /> الملاحظات
+                          </th>
+                          <th>
+                            Cost <br /> التكلفة
+                          </th>
+                          <th>
+                            Net <br /> الصافي
+                          </th>
+                          <th>
+                            Warranty <br /> الضمان
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for sale in sales %}
+                          <tr>
+                            <td>{{ sale.item }}</td>
+                            <td>{{ sale.model }}</td>
+                            <td>{{ sale.cost }}</td>
+                            <td>{{ sale.net }}</td>
+                            <td>{{ sale.warranty }}</td>
+
+                            <td>{{ sale.description }}</td>
+                            <td>{{ sale.notes }}</td>
+                            <td>
+                              <a class="btn btn-sm btn-info" href="{% url 'update_sale' sale.id %}">Update</a>
+                            </td>
+                            <td>
+                              <a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'Sales' sale.id %}" onclick="return confirmDelete();">Delete</a>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %}__________________payments_part_________________{% endcomment %}
+      <div class="tab-pane fade" id="payments" role="tabpanel" aria-labelledby="payments-tab">
+        {% comment %}search part{% endcomment %}
+        <div class="text-center my-3">
+          <button class="btn btn-primary" onclick="toggleSearchFormP()">🔍 Toggle Search Form</button>
+        </div>
+        <div class="row justify-content-center" id="search-paymentsform" style="display: none;">
+          <div class="col-md-8">
+            <div class="card shadow-sm">
+              <!-- إضافة ظل للبطاقة -->
+              <div class="card-body">
+                <form action="" method="get" class="row g-3 align-items-center">
+                  <!-- حقل الفلترة -->
+                  <div class="col-md-10">
+                    <div class="input-group">{{ paymentsFilter.form }}</div>
+                  </div>
+
+                  <!-- زر البحث -->
+                  <div class="col-md-2">
+                    <button class="btn search-btn w-100" type="submit"><i class="fas fa-search me-2"></i> Search <!-- إضافة أيقونة --></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% comment %}end search part{% endcomment %}
+        <br />
+        <div class="row">
+          <div class="col-md">
+            <div class="card card-body">
+              <!-- Button to Create a New Payment -->
+              <a class="btn btn-sm my-btn" href="{% url 'payments' %}">Create Payment</a>
+              <br />
+
+              <!-- Payment Tabs -->
+              <ul class="nav nav-tabs" id="paymentsTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="payments-basic-tab" data-toggle="tab" href="#payments-basic" role="tab" aria-controls="payments-basic" aria-selected="true">Basic Info</a>
+                </li>
+
+                {% comment %} <li class="nav-item">
+                  <a class="nav-link" id="payments-additional-tab" data-toggle="tab" href="#payments-additional" role="tab" aria-controls="payments-additional" aria-selected="false">Additional Info</a>
+                </li> {% endcomment %}
+              </ul>
+
+              <!-- Tab Content -->
+              <div class="tab-content" id="paymentsTabContent">
+                <!-- Basic Info Tab -->
+                <div class="tab-pane fade show active" id="payments-basic" role="tabpanel" aria-labelledby="payments-basic-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>
+                            Item <br /> العنصر
+                          </th>
+                          <th>
+                            Model <br /> الموديل
+                          </th>
+                          <th>
+                            Quantity <br /> الكمية
+                          </th>
+                          <th>
+                            Price <br /> السعر
+                          </th>
+
+                          <th>
+                            Status <br /> الحالة
+                          </th>
+
+                          <th>
+                            Serial Number <br /> الرقم التسلسلي
+                          </th>
+                          <th>
+                            Source <br /> المصدر
+                          </th>
+                          <th>
+                            Description <br /> الوصف
+                          </th>
+                          <th>
+                            Notes <br /> الملاحظات
+                          </th>
+
+                          <th>
+                            Warranty <br /> الضمان
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for payment in payments %}
+                          <tr>
+                            <td>{{ payment.item }}</td>
+                            <td>{{ payment.model }}</td>
+                            <td>{{ payment.quantity }}</td>
+                            <td>{{ payment.price }}</td>
+                            <td>{{ payment.status }}</td>
+                            <td>{{ payment.serial_number }}</td>
+                            <td>{{ payment.warranty }}</td>
+                            <td>{{ payment.source }}</td>
+                            <td>{{ payment.description }}</td>
+                            <td>{{ payment.notes }}</td>
+                            <td>
+                              <a class="btn btn-sm btn-info" href="{% url 'update_payment' payment.id %}">Update</a>
+                            </td>
+                            <td>
+                              <a class="btn btn-sm btn-danger" href="" onclick="return confirmDelete();">Delete</a>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+  </div>
+{% endblock %}

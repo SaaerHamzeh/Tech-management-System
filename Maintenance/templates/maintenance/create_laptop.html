@@ -1,0 +1,122 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="row">
+    <div class="col-md">
+      <div class="form-container">
+        <form action="" method="post">
+          {% csrf_token %}
+          <h2>Manage Laptop</h2>
+          <div class="form-grid">
+            <div class="form-column">
+
+              <div class="form-field">{{ laptopform.customer.label_tag }}
+                {{ laptopform.customer }}</div>
+
+              <div class="form-field">{{ laptopform.device_type_model.label_tag }}
+                {{ laptopform.device_type_model }}</div>
+
+              <div class="form-field">{{ laptopform.issue.label_tag }}
+                {{ laptopform.issue }}</div>
+
+              <div class="form-field">{{ laptopform.serial_number.label_tag }}
+                {{ laptopform.serial_number }}</div>
+                
+              <div class="form-field">{{ laptopform.processor.label_tag }}
+                {{ laptopform.processor }}</div>
+            </div>
+            <div class="form-column">
+              <label>How many RAMs?</label>
+              <select id="ram-count">
+                <option value="0">0</option>
+                {% for i in '1234'|make_list %}
+                  <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+
+              <div class="form-field">
+                {{ ram_formset.management_form }}
+                {% for form in ram_formset %}
+                  <div class="ram-form" style="display: none;">{{ form.as_p }}</div>
+                {% endfor %}
+              </div>
+
+              <label>How many hards?</label>
+              <select id="hard-count">
+                <option value="0">0</option>
+                {% for i in '1234'|make_list %}
+                  <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+              </select>
+
+              <div class="form-field">
+                {{ hard_formset.management_form }}
+                {% for form in hard_formset %}
+                  <div class="hard-form" style="display: none;">{{ form.as_p }}</div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="form-column">
+              <div class="form-field">{{ laptopform.secondary_hard_drive.label_tag }}
+                {{ laptopform.secondary_hard_drive }}</div>
+              <div class="form-field">{{ laptopform.igc.label_tag }}
+                {{ laptopform.igc }}</div>
+              <div class="form-field">{{ laptopform.dsgc.label_tag }}
+                {{ laptopform.dsgc }}</div>
+
+              <div class="form-field">{{ laptopform.drive.label_tag }}
+                {{ laptopform.drive }}</div>
+
+              <div class="form-field">{{ laptopform.powersupply.label_tag }}
+                {{ laptopform.powersupply }}</div>
+
+              <div class="form-field">{{ laptopform.monitor_serial_number.label_tag }}
+                {{ laptopform.monitor_serial_number }}</div>
+
+              <div class="form-field">{{ laptopform.notes.label_tag }}
+                {{ laptopform.notes }}</div>
+            </div>
+          </div>
+          <input type="submit" name="submit" value="ADD" class="submit-button" />
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    function toggleForms(prefix, count) {
+      const forms = document.querySelectorAll('.' + prefix + '-form')
+      forms.forEach((div, index) => {
+        div.style.display = index < count ? 'block' : 'none'
+      })
+    }
+    
+    function initFormCount(prefix) {
+      const forms = document.querySelectorAll('.' + prefix + '-form')
+      const countSelect = document.getElementById(prefix + '-count')
+    
+      const existingCount = Array.from(forms).filter((f) => {
+        // 🔍 بدنا نتحقق إذا الفورم فيه مدخلات بيانات
+        return f.querySelectorAll('input, select, textarea').some((input) => input.value.trim() !== '')
+      }).length
+    
+      // ✅ إذا ما في بيانات، نخلي القيمة صفر
+      const finalCount = existingCount > 0 ? existingCount : 0
+      countSelect.value = finalCount
+      toggleForms(prefix, finalCount)
+    }
+    
+    // ⚙️ عند تغيير القيمة من المستخدم
+    document.getElementById('ram-count').addEventListener('change', function () {
+      toggleForms('ram', parseInt(this.value))
+    })
+    
+    document.getElementById('hard-count').addEventListener('change', function () {
+      toggleForms('hard', parseInt(this.value))
+    })
+    
+    // 🚀 عند تحميل الصفحة: نحدد إذا كانت تعديل أو إضافة ونعرض بناءً عليه
+    window.onload = function () {
+      initFormCount('ram')
+      initFormCount('hard')
+    }
+  </script>
+{% endblock %}

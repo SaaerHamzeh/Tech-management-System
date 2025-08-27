@@ -1,0 +1,454 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="container-xxl">
+    <br />
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="main" aria-selected="true"><i class="fa fa-desktop"></i> PCs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="laptop-tab" data-toggle="tab" href="#laptop" role="tab" aria-controls="laptop" aria-selected="false"><i class="fa fa-laptop"></i> LAPTOPS</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="ps-tab" data-toggle="tab" href="#ps" role="tab" aria-controls="ps" aria-selected="false"><i class="fa fa-gamepad"></i> PLAYSTATIONS</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="stick-tab" data-toggle="tab" href="#stick" role="tab" aria-controls="stick" aria-selected="false"><i class="fa fa-gamepad"></i> PS_STICKS</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="router-tab" data-toggle="tab" href="#router" role="tab" aria-controls="router" aria-selected="false"><i class="fa fa-wifi"></i> ROUTERS</a>
+      </li>
+    </ul>
+    <br />
+    <div class="tab-content" id="myTabContent">
+      {% comment %}__________________PCs_part_________________{% endcomment %}
+      <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
+        <div class="row">
+          <div class="col-md">
+            <div class="card card-body">
+              <ul class="nav nav-tabs" id="pcTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="pc_basic-tab" data-toggle="tab" href="#pc_basic" role="tab" aria-controls="pc_basic" aria-selected="true">Basic Info</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="pc_second-tab" data-toggle="tab" href="#pc_second" role="tab" aria-controls="pc_second" aria-selected="false">Second Info</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="pc_others-tab" data-toggle="tab" href="#pc_others" role="tab" aria-controls="pc_others" aria-selected="false">Others & Actions</a>
+                </li>
+              </ul>
+              <a class="btn btn-sm my-btn" href="{% url 'create_pc' %}">Create PC</a>
+              <div class="tab-content" id="pcTab">
+                <div class="tab-pane fade show active" id="pc_basic" role="tabpanel" aria-labelledby="pc_basic-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>Customer</th>
+                          {% comment %} <th>Customer Phone</th> {% endcomment %}
+                          <th>Device Type / Model</th>
+                          <th>Issue</th>
+                          <th>Serial Number</th>
+                          <th>Motherboard</th>
+                          <th>RAM</th>
+                          <th>Primary Hard Drive</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for pc in pc %}
+                          <tr>
+                            <td>{{ pc.customer }}</td>
+                            {% comment %} <td>{{ pc.customer_phone_number }}</td> {% endcomment %}
+                            <td>{{ pc.device_type_model }}</td>
+                            <td>{{ pc.issue }}</td>
+                            <td>{{ pc.serial_number }}</td>
+                            <td>{{ pc.motherboard }}</td>
+                            <td>
+                              {% for ram in pc.rams.all %}
+                                <span class="badge bg-info text-dark">{{ ram.ram_type }} - {{ ram.ram_size }} - SN: {{ ram.ram_serial_number }}</span><a class="btn btn-sm btn-info" href="{% url 'update_pc_ram' ram.id %}">EDIT</a><a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'pcRAM' ram.id %}" onclick="return confirmDelete();">Delete</a><br />
+                              {% empty %}
+                                <span class="text-muted">No RAMs</span>
+                              {% endfor %}
+                            </td>
+                            <td>
+                              {% for hard in pc.hards.all %}
+                                <span class="badge bg-info text-dark">{{ hard.hard_type }} - {{ hard.hard_size }} - SN: {{ hard.hard_serial_number }}</span><a class="btn btn-sm btn-info" href="{% url 'update_pc_hard' hard.id %}">EDIT</a><a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'pcHARD' hard.id %}" onclick="return confirmDelete();">Delete</a><br />
+                              {% empty %}
+                                <span class="text-muted">No hards</span>
+                              {% endfor %}
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="pc_second" role="tabpanel" aria-labelledby="pc_second-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>Secondary Hard Drive</th>
+                          <th>Processor</th>
+                          <th>Integrated Graphics Card (IGC)</th>
+                          <th>Dedicated Graphics Card (DSGC)</th>
+                          <th>Drive</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for pc in pc %}
+                          <tr>
+                            <td>{{ pc.secondary_hard_drive }}</td>
+                            <td>{{ pc.processor }}</td>
+                            <td>{{ pc.igc }}</td>
+                            <td>{{ pc.dsgc }}</td>
+                            <td>{{ pc.drive }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="pc_others" role="tabpanel" aria-labelledby="pc_others-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>Power Supply</th>
+                          <th>case_type</th>
+                          <th>cooling_system</th>
+                          <th>expansion_slots</th>
+                          <th>Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for pc in pc %}
+                          <tr>
+                            <td>{{ pc.powersupply }}</td>
+                            <td>{{ pc.case_type }}</td>
+                            <td>{{ pc.cooling_system }}</td>
+                            <td>{{ pc.expansion_slots }}</td>
+                            <td>{{ pc.notes }}</td>
+
+                            <th>
+                              <a class="btn btn-sm btn-info" href="{% url 'update_pc' pc.id %}">Update</a>
+                            </th>
+                            <th>
+                              <a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'PC' pc.id %}" onclick="return confirmDelete();">Delete</a>
+                            </th>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %}__________________laptops_part_________________{% endcomment %}
+      <div class="tab-pane fade" id="laptop" role="tabpanel" aria-labelledby="laptop-tab">
+        <div class="row">
+          <div class="col-md">
+            <div class="card card-body">
+              <ul class="nav nav-tabs" id="laptopTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="laptop_basic-tab" data-toggle="tab" href="#laptop_basic" role="tab" aria-controls="laptop_basic" aria-selected="true">Basic Info</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="laptop_second-tab" data-toggle="tab" href="#laptop_second" role="tab" aria-controls="laptop_second" aria-selected="false">Second Info</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="laptop_others-tab" data-toggle="tab" href="#laptop_others" role="tab" aria-controls="laptop_others" aria-selected="false">Others & Actions</a>
+                </li>
+              </ul>
+              <a class="btn btn-sm my-btn" href="{% url 'create_laptop' %}">Create Laptop</a>
+              <div class="tab-content" id="laptopTab">
+                <div class="tab-pane fade show active" id="laptop_basic" role="tabpanel" aria-labelledby="laptop_basic-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>Customer</th>
+                          {% comment %} <th>Customer Phone</th> {% endcomment %}
+                          <th>Device Type / Model</th>
+                          <th>Issue</th>
+                          <th>Serial Number</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for lap in laptops %}
+                          <tr>
+                            <td>{{ lap.customer }}</td>
+                            {% comment %} <td>{{ lap.customer_phone_number }}</td> {% endcomment %}
+                            <td>{{ lap.device_type_model }}</td>
+                            <td>{{ lap.issue }}</td>
+                            <td>{{ lap.serial_number }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="laptop_second" role="tabpanel" aria-labelledby="laptop_second-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>RAM</th>
+                          <th>Primary Hard Drive</th>
+                          <th>Secondary Hard Drive</th>
+                          <th>Processor</th>
+                          <th>Integrated Graphics Card (IGC)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for lap in laptops %}
+                          <tr>
+                            <td>
+                              {% for ram in lap.rams.all %}
+                                <span class="badge bg-info text-dark">{{ ram.ram_type }} - {{ ram.ram_size }} - SN: {{ ram.ram_serial_number }}</span><a class="btn btn-sm btn-info" href="{% url 'update_laptop_ram' ram.id %}">EDIT</a><a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'laptopRAM' ram.id %}" onclick="return confirmDelete();">Delete</a><br />
+                              {% empty %}
+                                <span class="text-muted">No RAMs</span>
+                              {% endfor %}
+                            </td>
+                            <td>
+                              {% for hard in lap.hards.all %}
+                                <span class="badge bg-info text-dark">{{ hard.hard_type }} - {{ hard.hard_size }} - SN: {{ hard.hard_serial_number }}</span><a class="btn btn-sm btn-info" href="{% url 'update_laptop_hard' hard.id %}">EDIT</a><a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'laptopHARD' hard.id %}" onclick="return confirmDelete();">Delete</a><br />
+                              {% empty %}
+                                <span class="text-muted">No hards</span>
+                              {% endfor %}
+                            </td>
+                            <td>{{ lap.secondary_hard_drive }}</td>
+                            <td>{{ lap.processor }}</td>
+                            <td>{{ lap.igc }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="laptop_others" role="tabpanel" aria-labelledby="laptop_others-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>Dedicated Graphics Card (DSGC)</th>
+                          <th>Drive</th>
+                          <th>AC adpter</th>
+                          <th>Monitor SN</th>
+                          <th>Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for lap in laptops %}
+                          <tr>
+                            <td>{{ lap.dsgc }}</td>
+                            <td>{{ lap.drive }}</td>
+                            <td>{{ lap.powersupply }}</td>
+                            <td>{{ lap.monitor_serial_number }}</td>
+                            <td>{{ lap.notes }}</td>
+
+                            <th>
+                              <a class="btn btn-sm btn-info" href="{% url 'update_laptop' lap.id %}">Update</a>
+                            </th>
+                            <th>
+                              <a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'Laptop' lap.id %}" onclick="return confirmDelete();">Delete</a>
+                            </th>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %}__________________ps_part_________________{% endcomment %}
+      <div class="tab-pane fade" id="ps" role="tabpanel" aria-labelledby="ps-tab">
+        <div class="row">
+          <div class="col-md">
+            <div class="card card-body">
+              <ul class="nav nav-tabs" id="psTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="ps_basic-tab" data-toggle="tab" href="#ps_basic" role="tab" aria-controls="ps_basic" aria-selected="true">Basic Info</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="ps_others-tab" data-toggle="tab" href="#ps_others" role="tab" aria-controls="ps_others" aria-selected="false">Others & Actions</a>
+                </li>
+              </ul>
+              <a class="btn btn-sm my-btn" href="{% url 'create_PS' %}">Create PS</a>
+              <div class="tab-content" id="psTab">
+                <div class="tab-pane fade show active" id="ps_basic" role="tabpanel" aria-labelledby="ps_basic-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>Customer</th>
+                          {% comment %} <th>Customer Phone</th> {% endcomment %}
+                          <th>Device Type / Model</th>
+                          <th>Issue</th>
+                          <th>Serial Number</th>
+                          <th>Storage</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for PS in playsations %}
+                          <tr>
+                            <td>{{ PS.customer }}</td>
+                            {% comment %} <td>{{ PS.customer_phone_number }}</td> {% endcomment %}
+                            <td>{{ PS.device_type_model }}</td>
+                            <td>{{ PS.issue }}</td>
+                            <td>{{ PS.serial_number }}</td>
+                            <td>{{ PS.storage }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="ps_others" role="tabpanel" aria-labelledby="ps_others-tab">
+                  <div class="table_container">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th>Power Supply</th>
+                          <th>Firmware Version</th>
+                          <th>Accessories</th>
+                          <th>Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for PS in playsations %}
+                          <tr>
+                            <td>{{ PS.power_supply }}</td>
+                            <td>{{ PS.firmware_version }}</td>
+                            <td>{{ PS.accessories }}</td>
+                            <td>{{ PS.notes }}</td>
+
+                            <th>
+                              <a class="btn btn-sm btn-info" href="{% url 'update_PS' PS.id %}">Update</a>
+                            </th>
+                            <th>
+                              <a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'PlayStation' PS.id %}" onclick="return confirmDelete();">Delete</a>
+                            </th>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %}__________________game-sticks_part_________________{% endcomment %}
+      <div class="tab-pane fade" id="stick" role="tabpanel" aria-labelledby="stick-tab">
+        <div class="row">
+          <div class="col-md">
+            <div class="card card-body">
+              <a class="btn btn-sm my-btn" href="{% url 'create_PS_stick' %}">Create stick</a>
+
+              <div class="table_container">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      {% comment %} <th>Customer Phone</th> {% endcomment %}
+                      <th>Model</th>
+                      <th>Type</th>
+                      <th>Status</th>
+                      <th>Stick Number</th>
+                      <th>Serial Number</th>
+                      <th>Issue</th>
+                      <th>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for GS in gamesticks %}
+                      <tr>
+                        <td>{{ GS.customer }}</td>
+                        {% comment %} <td>{{ GS.customer_phone_number }}</td> {% endcomment %}
+                        <td>{{ GS.model }}</td>
+                        <td>{{ GS.type }}</td>
+                        <td>{{ GS.status }}</td>
+                        <td>{{ GS.stick_number }}</td>
+                        <td>{{ GS.serial_number }}</td>
+                        <td>{{ GS.issue }}</td>
+                        <td>{{ GS.notes }}</td>
+
+                        <th>
+                          <a class="btn btn-sm btn-info" href="{% url 'update_PS_stick' GS.id %}">Update</a>
+                        </th>
+                        <th>
+                          <a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'GameStick' GS.id %}" onclick="return confirmDelete();">Delete</a>
+                        </th>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% comment %}__________________routers_part_________________{% endcomment %}
+      <div class="tab-pane fade" id="router" role="tabpanel" aria-labelledby="router-tab">
+        <div class="row">
+          <div class="col-md">
+            <div class="card card-body">
+              <a class="btn btn-sm my-btn" href="{% url 'create_router' %}">Create router</a>
+              <div class="table_container">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      {% comment %} <th>Customer Phone</th> {% endcomment %}
+                      <th>Brand</th>
+                      <th>Model</th>
+                      <th>Serial Number</th>
+                      <th>Mac-Address</th>
+                      <th>Status</th>
+                      <th>Issue</th>
+                      <th>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for R in routers %}
+                      <tr>
+                        <td>{{ R.customer }}</td>
+                        {% comment %} <td>{{ R.customer_phone_number }}</td> {% endcomment %}
+                        <td>{{ R.brand }}</td>
+                        <td>{{ R.model }}</td>
+                        <td>{{ R.serial_number }}</td>
+                        <td>{{ R.mac_address }}</td>
+                        <td>{{ R.status }}</td>
+                        <td>{{ R.issue }}</td>
+                        <td>{{ R.notes }}</td>
+
+                        <th>
+                          <a class="btn btn-sm btn-info" href="{% url 'update_router' R.id %}">Update</a>
+                        </th>
+                        <th>
+                          <a class="btn btn-sm btn-danger" href="{% url 'delete_object' 'Router' R.id %}" onclick="return confirmDelete();">Delete</a>
+                        </th>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="row">
+    <div class="col-md">
+      <div class="form-container">
+        <form action="" method="post">
+          {% csrf_token %}
+          <h2>Managing RAM</h2>
+          <div class="form-grid">
+            <div class="form-column">
+              <div class="form-field">{{ ramform.pc.label_tag }}
+                {{ ramform.pc }}</div>
+              <div class="form-field">{{ ramform.ram_type.label_tag }}
+                {{ ramform.ram_type }}</div>
+            </div>
+            <div class="form-column">
+              <div class="form-field">{{ ramform.ram_size.label_tag }}
+                {{ ramform.ram_size }}</div>
+            </div>
+            <div class="form-column">
+              <div class="form-field">{{ ramform.ram_serial_number.label_tag }}
+                {{ ramform.ram_serial_number }}</div>
+            </div>
+          </div>
+          <input type="submit" name="submit" value="submit" class="submit-button" />
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

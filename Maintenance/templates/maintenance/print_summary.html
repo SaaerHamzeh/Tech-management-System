@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Maintenance Summary</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body onload="window.print()">
+    <div style="text-align: center; margin-top: 40px;">
+      <a href="{% url 'alshaar dashboard' %}" class="btn btn-primary">🏠 العودة إلى الصفحة الرئيسية</a>
+    </div>
+
+    <h1>Maintenance Summary</h1>
+
+    <h2>Customer Info</h2>
+    <p>
+      <strong>Name:</strong> {{ maintenance.customer.name }}
+    </p>
+    <p>
+      <strong>Phone:</strong> {{ maintenance.customer.phone }}
+    </p>
+
+    <h2>Maintenance Info</h2>
+    <p>
+      <strong>Maintenance ID:</strong> {{ maintenance.maintenance_number }}
+    </p>
+    <p>
+      <strong>Status:</strong> {{ maintenance.maintenance_status }}
+    </p>
+    <p>
+      <strong>Issue:</strong> {{ maintenance.issue }}
+    </p>
+    <p>
+      <strong>Report:</strong> {{ maintenance.maintenance_report }}
+    </p>
+    <p>
+      <strong>Technician:</strong> {{ maintenance.technician_name }}
+    </p>
+    <p>
+      <strong>Cost:</strong> {{ maintenance.cost }}
+    </p>
+    <p>
+      <strong>Date:</strong> {{ maintenance.date_created }}
+    </p>
+
+    {% if device_fields %}
+      <h2>Device Info</h2>
+      <table>
+        {% for field in device_fields %}
+          <tr>
+            <th>{{ field.label }}</th>
+            <td>{{ field.value }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+  </body>
+</html>

@@ -1,0 +1,42 @@
+{% extends 'Maintenance/main.html' %}
+{% block content %}
+  <div class="row">
+    <div class="col-md">
+      <div class="form-container">
+        <form action="" method="post">
+          {% csrf_token %}
+          <h2>Manage Stick</h2>
+          <div class="form-grid">
+            <div class="form-column">
+              <div class="form-field">{{ gamestick_form.customer.label_tag }}
+                {{ gamestick_form.customer }}</div>
+              <div class="form-field">{{ gamestick_form.model.label_tag }}
+                {{ gamestick_form.model }}</div>
+
+              <div class="form-field">{{ gamestick_form.type.label_tag }}
+                {{ gamestick_form.type }}</div>
+            </div>
+            <div class="form-column">
+              <div class="form-field">{{ gamestick_form.serial_number.label_tag }}
+                {{ gamestick_form.serial_number }}</div>
+
+              <div class="form-field">{{ gamestick_form.stick_number.label_tag }}
+                {{ gamestick_form.stick_number }}</div>
+
+              <div class="form-field">{{ gamestick_form.status.label_tag }}
+                {{ gamestick_form.status }}</div>
+            </div>
+            <div class="form-column">
+              <div class="form-field">{{ gamestick_form.issue.label_tag }}
+                {{ gamestick_form.issue }}</div>
+
+              <div class="form-field">{{ gamestick_form.notes.label_tag }}
+                {{ gamestick_form.notes }}</div>
+            </div>
+          </div>
+          <input type="submit" name="submit" value="submit" class="submit-button" />
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
